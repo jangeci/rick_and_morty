@@ -4,7 +4,9 @@ import 'package:rick_and_morty/app/data/models/character.dart';
 class HomeController extends GetxController with StateMixin<CharactersResult>{
 
   RxList<Character> characters = RxList<Character>();
-  var Info;
+  var info;
+
+  RxList<Character> favorites = RxList<Character>();
 
   var page = 1;
   var nameFilter = '';
@@ -21,6 +23,6 @@ class HomeController extends GetxController with StateMixin<CharactersResult>{
   }
 
   void loadCharacters() async {
-    //TODO
+
   }
 }
