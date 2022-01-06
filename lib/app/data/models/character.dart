@@ -7,14 +7,14 @@ class CharactersResult {
   CharactersResult({this.characters = const [], this.info});
 
   factory CharactersResult.fromJson(Map<String, dynamic> json) {
-    var objs;
-    List<Character> characterss = [];
+    List<Character> characters = [];
     if (json['results'] != null) {
-      objs = jsonDecode(json['results']) as List;
-      characterss = objs.map((char) => Character.fromJson(char)).toList();
+      json['results'].forEach((character){
+        characters.add(Character.fromJson(character));
+      });
     }
 
-    return CharactersResult(characters: characterss, info: json['info'] != null ? Info.fromJson(json['info']) : null);
+    return CharactersResult(characters: characters, info: json['info'] != null ? Info.fromJson(json['info']) : null);
   }
 }
 
