@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:rick_and_morty/app/data/models/character.dart';
 import 'package:rick_and_morty/app/data/services/characters_service.dart';
@@ -5,15 +6,20 @@ import 'package:rick_and_morty/app/data/services/characters_service.dart';
 class HomeController extends GetxController with StateMixin<CharactersResult> {
   CharactersService service = CharactersService();
   RxList<Character> characters = RxList<Character>();
-
   RxList<Character> favorites = RxList<Character>();
+
+  ScrollController scrollController = ScrollController();
+  ScrollController favoriteController = ScrollController();
 
   var page = 1;
   var nameFilter = '';
 
+  Info? info;
+
   @override
   void onInit() {
     loadCharacters();
+    initPagination();
     super.onInit();
   }
 
@@ -22,17 +28,28 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
     nameFilter = '';
   }
 
+  void initPagination(){
+    scrollController.addListener(() {
+      if(scrollController.position.maxScrollExtent == scrollController.position.pixels && info?.next != null){
+        page++;
+        loadCharacters();
+        update();
+      }
+    });
+  }
+
   void loadCharacters() async {
+    change(null, status: RxStatus.loading());
     service
         .fetchCharacters(
       name: nameFilter,
-      ids: null,
+      ids: null, //TODO
       page: page,
     )
         .then((response) {
       characters.addAll(response.characters);
-
-      if (response.characters.isEmpty) {
+      info = response.info;
+      if (characters.isEmpty) {
         change(response, status: RxStatus.empty());
       } else {
         change(response, status: RxStatus.success());

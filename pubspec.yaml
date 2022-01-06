@@ -9,6 +9,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: 4.6.1
   shared_preferences: ^2.0.11
+  shimmer: ^2.0.0
 
   flutter: 
     sdk: flutter

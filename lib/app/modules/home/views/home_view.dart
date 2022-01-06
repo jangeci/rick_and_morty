@@ -36,8 +36,17 @@ class HomeView extends GetView<HomeController> {
             SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
+                controller: homeController.scrollController,
                 itemCount: data!.characters.length,
                 itemBuilder: (context, index) {
+                  if (data.info?.next != null && index == data.characters.length - 1 && homeController.status.isLoading) {
+                    return Column(
+                      children: [
+                        CharacterTile(character: data.characters[index]),
+                        LoadingTile()
+                      ],
+                    );
+                  }
                   return CharacterTile(character: data.characters[index]);
                 },
               ),
@@ -61,7 +70,14 @@ class HomeView extends GetView<HomeController> {
             child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
           ));
         },
-        onLoading: LoadingTile(),
+        onLoading: Column(
+          children: [
+            SizedBox(height: 12),
+            LoadingTile(),
+            LoadingTile(),
+            LoadingTile(),
+          ],
+        ),
       ),
     );
   }
