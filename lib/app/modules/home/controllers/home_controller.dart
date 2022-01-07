@@ -13,6 +13,7 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
 
   var page = 1;
   var nameFilter = '';
+  var paginationLoading = false;
 
   Info? info;
 
@@ -30,16 +31,20 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
 
   void initPagination(){
     scrollController.addListener(() {
-      if(scrollController.position.maxScrollExtent == scrollController.position.pixels && info?.next != null){
-        page++;
-        loadCharacters();
-        update();
+      if(!status.isLoading && !paginationLoading){
+        if(scrollController.position.maxScrollExtent == scrollController.position.pixels && info?.next != null){
+          page++;
+          paginationLoading = true;
+          loadCharacters();
+        }
       }
     });
   }
 
   void loadCharacters() async {
-    change(null, status: RxStatus.loading());
+    if(!paginationLoading){
+      change(null, status: RxStatus.loading());
+    }
     service
         .fetchCharacters(
       name: nameFilter,
@@ -49,6 +54,7 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
         .then((response) {
       characters.addAll(response.characters);
       info = response.info;
+      paginationLoading = false;
       if (characters.isEmpty) {
         change(response, status: RxStatus.empty());
       } else {

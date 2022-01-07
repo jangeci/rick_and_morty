@@ -13,7 +13,7 @@ class CharactersService extends GetConnect {
     }
 
     if (name != null) {
-      baseUrl += '${page != null ? '&' : '?'}page=$page';
+      baseUrl += '${page != null ? '&' : '?'}name=$name';
     }
 
     if (ids != null) {

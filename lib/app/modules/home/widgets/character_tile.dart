@@ -12,7 +12,7 @@ class CharacterTile extends StatelessWidget {
       height: 100,
       width: double.infinity,
       padding: const EdgeInsets.only(
-        bottom: 12,
+        bottom: 6,
         left: 12,
         right: 12,
       ),

@@ -30,54 +30,54 @@ class HomeView extends GetView<HomeController> {
           )
         ],
       ),
-      body: homeController.obx(
-        (data) => Column(
-          children: [
-            SizedBox(height: 12),
-            Expanded(
-              child: ListView.builder(
+      body: Column(
+        children: [
+          Expanded(
+            child: homeController.obx(
+              (data) => ListView.builder(
+                padding: const EdgeInsets.only(top: 12),
                 controller: homeController.scrollController,
-                itemCount: data!.characters.length,
+                itemCount: homeController.characters.length,
                 itemBuilder: (context, index) {
-                  if (data.info?.next != null && index == data.characters.length - 1 && homeController.status.isLoading) {
+                  if(homeController.characters.length - 1 == index && homeController.info?.next != null){
                     return Column(
                       children: [
-                        CharacterTile(character: data.characters[index]),
+                        CharacterTile(character: homeController.characters[index]),
                         LoadingTile()
                       ],
                     );
                   }
-                  return CharacterTile(character: data.characters[index]);
+                  return CharacterTile(character: homeController.characters[index]);
                 },
               ),
-            ),
-          ],
-        ),
-        onEmpty: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              'No characters matching your criteria were found',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              onEmpty: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    'No characters matching your criteria were found',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
+                ),
+              ),
+              onError: (error) {
+                return Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
+                ));
+              },
+              onLoading: Column(
+                children: [
+                  SizedBox(height: 10),
+                  LoadingTile(),
+                  LoadingTile(),
+                  LoadingTile(),
+                ],
+              ),
             ),
           ),
-        ),
-        onError: (error) {
-          return Center(
-              child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
-          ));
-        },
-        onLoading: Column(
-          children: [
-            SizedBox(height: 12),
-            LoadingTile(),
-            LoadingTile(),
-            LoadingTile(),
-          ],
-        ),
+        ],
       ),
     );
   }
