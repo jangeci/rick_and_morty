@@ -29,11 +29,7 @@ class FavoriteController extends GetxController with StateMixin<List<Character>>
     if (!disableLoading) {
       change(null, status: RxStatus.loading());
     }
-    service
-        .fetchCharactersById(
-      ids: favoritesId,
-    )
-        .then((response) {
+    service.fetchCharactersById(ids: favoritesId).then((response) {
       favoriteCharacters.value = response;
       if (favoriteCharacters.isEmpty) {
         change(response, status: RxStatus.empty());

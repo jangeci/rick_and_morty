@@ -93,7 +93,7 @@ class HomeView extends GetView<HomeController> {
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Text(
-                            'No characters matching your criteria were found',
+                            'No favorites found',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.grey, fontSize: 16),
                           ),
