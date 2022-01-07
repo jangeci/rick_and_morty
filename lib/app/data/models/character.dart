@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class CharactersResult {
   final Info? info;
   final List<Character> characters;

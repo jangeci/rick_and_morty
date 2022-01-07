@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:rick_and_morty/app/modules/home/controllers/home_controller.dart';
 
-import '../controllers/detail_controller.dart';
-
-class DetailView extends GetView<DetailController> {
+class DetailView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

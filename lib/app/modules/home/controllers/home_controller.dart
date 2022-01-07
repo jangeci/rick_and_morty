@@ -1,27 +1,39 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rick_and_morty/app/data/models/character.dart';
 import 'package:rick_and_morty/app/data/services/characters_service.dart';
 
-class HomeController extends GetxController with StateMixin<CharactersResult> {
+class HomeController extends GetxController with StateMixin<CharactersResult>, GetSingleTickerProviderStateMixin {
   CharactersService service = CharactersService();
   RxList<Character> characters = RxList<Character>();
-  RxList<Character> favorites = RxList<Character>();
 
   ScrollController scrollController = ScrollController();
-  ScrollController favoriteController = ScrollController();
+  late TabController tabController;
 
   var page = 1;
   var nameFilter = '';
   var paginationLoading = false;
+  var favoriteMode = false.obs;
 
   Info? info;
 
   @override
   void onInit() {
+    tabController = TabController(length: 2, vsync: this);
     loadCharacters();
     initPagination();
+    tabController.addListener(() {
+      favoriteMode.value = tabController.index == 1;
+    });
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    tabController.dispose();
+    super.onClose();
   }
 
   void resetFilters() {
@@ -29,10 +41,10 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
     nameFilter = '';
   }
 
-  void initPagination(){
+  void initPagination() {
     scrollController.addListener(() {
-      if(!status.isLoading && !paginationLoading){
-        if(scrollController.position.maxScrollExtent == scrollController.position.pixels && info?.next != null){
+      if (!status.isLoading && !paginationLoading) {
+        if (scrollController.position.maxScrollExtent == scrollController.position.pixels && info?.next != null) {
           page++;
           paginationLoading = true;
           loadCharacters();
@@ -42,16 +54,10 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
   }
 
   void loadCharacters() async {
-    if(!paginationLoading){
+    if (!paginationLoading) {
       change(null, status: RxStatus.loading());
     }
-    service
-        .fetchCharacters(
-      name: nameFilter,
-      ids: null, //TODO
-      page: page,
-    )
-        .then((response) {
+    service.fetchCharacters(name: nameFilter, page: page).then((response) {
       characters.addAll(response.characters);
       info = response.info;
       paginationLoading = false;
@@ -65,7 +71,12 @@ class HomeController extends GetxController with StateMixin<CharactersResult> {
     });
   }
 
-  void paginate() {
-    //TODO
+  void switchMode() {
+    favoriteMode.toggle();
+    if (favoriteMode.isTrue) {
+      tabController.animateTo(1);
+    } else {
+      tabController.animateTo(0);
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rick_and_morty/app/data/models/character.dart';
+import 'package:rick_and_morty/app/modules/home/controllers/favorite_controller.dart';
 
 class CharacterTile extends StatelessWidget {
   final Character character;
@@ -8,6 +10,8 @@ class CharacterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FavoriteController controller = Get.find();
+
     return Container(
       height: 100,
       width: double.infinity,
@@ -47,11 +51,13 @@ class CharacterTile extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                IconButton(
-                  icon: Icon(Icons.star_border),
-                  onPressed: () {
-                    //TODO favorite
-                  },
+                Obx(
+                  () => IconButton(
+                    icon: Icon(controller.isFavorite(character.id) ? Icons.star : Icons.star_border),
+                    onPressed: () {
+                      controller.setFavorite(character.id);
+                    },
+                  ),
                 ),
               ],
             )
