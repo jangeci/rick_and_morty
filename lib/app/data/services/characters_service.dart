@@ -29,7 +29,7 @@ class CharactersService extends GetConnect {
   }) async {
     String baseUrl = 'https://rickandmortyapi.com/api/character/';
     List<Character> characters = [];
-    if (ids != null) {
+    if (ids != null && ids.isNotEmpty) {
       baseUrl += ids.join(',');
     } else {
       return characters;
@@ -39,9 +39,14 @@ class CharactersService extends GetConnect {
     if (response.status.hasError) {
       return Future.error(response.statusText!);
     } else {
-      response.body.forEach((character) {
-        characters.add(Character.fromJson(character));
-      });
+      if (response.body is Map<String, dynamic>) {
+        characters.add(Character.fromJson(response.body));
+      } else {
+        response.body.forEach((character) {
+          characters.add(Character.fromJson(character));
+        });
+      }
+
       return characters;
     }
   }
