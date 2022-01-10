@@ -23,7 +23,7 @@ class DetailView extends GetView {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              if(!favoriteController.isFavorite(id) && fav){
+              if(favoriteController.isFavorite(id) == false && fav == true){
                 homeController.switchMode();
               }
               Get.back();
