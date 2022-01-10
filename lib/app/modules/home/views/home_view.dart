@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rick_and_morty/app/modules/home/controllers/favorite_controller.dart';
 import 'package:rick_and_morty/app/modules/home/widgets/character_tile.dart';
@@ -13,6 +14,12 @@ class HomeView extends GetView<HomeController> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            controller.toggleSearch();
+          },
+        ),
         title: Obx(
           () => Text(controller.favoriteMode.value == false ? 'All characters' : 'Favorites'),
         ),
@@ -30,6 +37,38 @@ class HomeView extends GetView<HomeController> {
       ),
       body: Column(
         children: [
+          Obx(
+            () => AnimatedContainer(
+              clipBehavior: Clip.hardEdge,
+              alignment: Alignment.topCenter,
+              decoration: BoxDecoration(),
+              duration: Duration(milliseconds: 300),
+              height: controller.searchOpened.isTrue ? 60 : 0,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                ),
+                child: TextField(
+                  controller: controller.searchController,
+                  onChanged: (_) {
+                    controller.search();
+                  },
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        controller.searchController.text = '';
+                        controller.search();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: DefaultTabController(
                 length: controller.tabController.length,
@@ -72,17 +111,19 @@ class HomeView extends GetView<HomeController> {
                           child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
                         ));
                       },
-                      onLoading: Column(
-                        children: [
-                          SizedBox(height: 12),
-                          LoadingTile(),
-                          LoadingTile(),
-                          LoadingTile(),
-                        ],
+                      onLoading: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 12),
+                            LoadingTile(),
+                            LoadingTile(),
+                            LoadingTile(),
+                          ],
+                        ),
                       ),
                     ),
                     favoriteController.obx(
-                          (data) => ListView.builder(
+                      (data) => ListView.builder(
                         padding: const EdgeInsets.only(top: 12),
                         itemCount: favoriteController.favoriteCharacters.length,
                         itemBuilder: (context, index) {
@@ -102,17 +143,19 @@ class HomeView extends GetView<HomeController> {
                       onError: (error) {
                         return Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
-                            ));
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(error.toString(), style: TextStyle(color: Colors.deepOrangeAccent, fontSize: 16)),
+                        ));
                       },
-                      onLoading: Column(
-                        children: [
-                          SizedBox(height: 12),
-                          LoadingTile(),
-                          LoadingTile(),
-                          LoadingTile(),
-                        ],
+                      onLoading: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 12),
+                            LoadingTile(),
+                            LoadingTile(),
+                            LoadingTile(),
+                          ],
+                        ),
                       ),
                     ),
                   ],

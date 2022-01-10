@@ -8,13 +8,14 @@ class HomeController extends GetxController with StateMixin<CharactersResult>, G
   CharactersService service = CharactersService();
   RxList<Character> characters = RxList<Character>();
 
+  TextEditingController searchController = TextEditingController();
   ScrollController scrollController = ScrollController();
   late TabController tabController;
 
   var page = 1;
-  var nameFilter = '';
   var paginationLoading = false;
   var favoriteMode = false.obs;
+  var searchOpened = false.obs;
 
   Info? info;
 
@@ -29,16 +30,18 @@ class HomeController extends GetxController with StateMixin<CharactersResult>, G
     super.onInit();
   }
 
+  void search() {
+    characters.clear();
+    page = 1;
+    loadCharacters();
+  }
+
   @override
   void onClose() {
     scrollController.dispose();
     tabController.dispose();
+    searchController.dispose();
     super.onClose();
-  }
-
-  void resetFilters() {
-    page = 1;
-    nameFilter = '';
   }
 
   void initPagination() {
@@ -57,7 +60,7 @@ class HomeController extends GetxController with StateMixin<CharactersResult>, G
     if (!paginationLoading) {
       change(null, status: RxStatus.loading());
     }
-    service.fetchCharacters(name: nameFilter, page: page).then((response) {
+    service.fetchCharacters(name: searchController.text, page: page).then((response) {
       characters.addAll(response.characters);
       info = response.info;
       paginationLoading = false;
@@ -78,5 +81,9 @@ class HomeController extends GetxController with StateMixin<CharactersResult>, G
     } else {
       tabController.animateTo(0);
     }
+  }
+
+  void toggleSearch() {
+    searchOpened.toggle();
   }
 }
