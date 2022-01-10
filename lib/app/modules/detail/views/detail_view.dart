@@ -66,6 +66,25 @@ class DetailView extends GetView {
                     ],
                   ),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 12),
+                    Text(character.name),
+                    SizedBox(height: 12),
+                    Text('Species: ${character.species}'),
+                    SizedBox(height: 12),
+                    Text('Gender: ${character.gender}'),
+                    SizedBox(height: 12),
+                    Text('Status: ${character.status}'),
+                    SizedBox(height: 12),
+                    Text('Location: ${character.location.name}'),
+                    SizedBox(height: 12),
+                  ],
+                ),
               )
             ],
           ),
