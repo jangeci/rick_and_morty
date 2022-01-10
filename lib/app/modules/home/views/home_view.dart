@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rick_and_morty/app/modules/home/controllers/favorite_controller.dart';
 import 'package:rick_and_morty/app/modules/home/widgets/character_tile.dart';
@@ -17,7 +16,7 @@ class HomeView extends GetView<HomeController> {
         leading: IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            controller.toggleSearch();
+            controller.toggleSearch(context);
           },
         ),
         title: Obx(

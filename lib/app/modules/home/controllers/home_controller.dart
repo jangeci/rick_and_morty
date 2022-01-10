@@ -83,7 +83,10 @@ class HomeController extends GetxController with StateMixin<CharactersResult>, G
     }
   }
 
-  void toggleSearch() {
+  void toggleSearch(BuildContext context) {
     searchOpened.toggle();
+    if(searchOpened.isFalse){
+      FocusScope.of(context).unfocus();
+    }
   }
 }
