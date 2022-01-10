@@ -9,7 +9,8 @@ class FavoriteController extends GetxController with StateMixin<List<Character>>
   CharactersService service = CharactersService();
 
   RxList<int> favoritesId = RxList<int>();
-  RxList<Character> favoriteCharacters = RxList<Character>();
+  final RxList<Character> _favoriteCharacters = RxList<Character>();
+  RxList<Character> favoriteCharactersFiltered = RxList<Character>();
 
   bool disableLoading = false;
 
@@ -21,8 +22,16 @@ class FavoriteController extends GetxController with StateMixin<List<Character>>
     super.onInit();
   }
 
-  void resetFilters() {
-    nameFilter = '';
+  void setFilter({String filter = ''}){
+    nameFilter = filter;
+    _filter();
+  }
+
+  void _filter() {
+    favoriteCharactersFiltered.clear();
+    favoriteCharactersFiltered.addAll(_favoriteCharacters);
+    favoriteCharactersFiltered.removeWhere((element) => !element.name.isCaseInsensitiveContains(nameFilter));
+    update();
   }
 
   Future loadCharacters() async {
@@ -30,11 +39,12 @@ class FavoriteController extends GetxController with StateMixin<List<Character>>
       change(null, status: RxStatus.loading());
     }
     service.fetchCharactersById(ids: favoritesId).then((response) {
-      favoriteCharacters.value = response;
-      if (favoriteCharacters.isEmpty) {
+      _favoriteCharacters.value = response;
+      if (_favoriteCharacters.isEmpty) {
         change(response, status: RxStatus.empty());
       } else {
         change(response, status: RxStatus.success());
+        _filter();
       }
     }, onError: (err) {
       change(null, status: RxStatus.error(err.toString()));

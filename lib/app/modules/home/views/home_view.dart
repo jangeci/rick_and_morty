@@ -53,8 +53,9 @@ class HomeView extends GetView<HomeController> {
                 ),
                 child: TextField(
                   controller: controller.searchController,
-                  onChanged: (_) {
+                  onChanged: (text) {
                     controller.search();
+                    favoriteController.setFilter(filter: text);
                   },
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
@@ -62,6 +63,7 @@ class HomeView extends GetView<HomeController> {
                       onPressed: () {
                         controller.searchController.text = '';
                         controller.search();
+                        favoriteController.setFilter(filter: '');
                       },
                     ),
                   ),
@@ -125,9 +127,9 @@ class HomeView extends GetView<HomeController> {
                     favoriteController.obx(
                       (data) => ListView.builder(
                         padding: const EdgeInsets.only(top: 12),
-                        itemCount: favoriteController.favoriteCharacters.length,
+                        itemCount: favoriteController.favoriteCharactersFiltered.length,
                         itemBuilder: (context, index) {
-                          return CharacterTile(character: favoriteController.favoriteCharacters[index]);
+                          return CharacterTile(character: favoriteController.favoriteCharactersFiltered[index]);
                         },
                       ),
                       onEmpty: Center(

@@ -14,11 +14,10 @@ class DetailView extends GetView {
     int id = Get.arguments['id'];
     late Character character;
     bool fav = favoriteController.isFavorite(id);
-    if (fav) {
-      character = favoriteController.favoriteCharacters.firstWhere((element) => element.id == id);
-    } else {
-      character = homeController.characters.firstWhere((element) => element.id == id);
-    }
+
+    final List<Character> allCharacters = [...favoriteController.favoriteCharactersFiltered, ...homeController.characters ];
+    character = allCharacters.firstWhere((element) => element.id == id);
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
