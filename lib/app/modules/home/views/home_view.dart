@@ -60,9 +60,13 @@ class HomeView extends GetView<HomeController> {
                     suffixIcon: IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
-                        controller.searchController.text = '';
-                        controller.search();
-                        favoriteController.setFilter(filter: '');
+                        if (controller.searchController.text == '') {
+                          controller.toggleSearch(context);
+                        } else {
+                          controller.searchController.text = '';
+                          controller.search();
+                          favoriteController.setFilter(filter: '');
+                        }
                       },
                     ),
                   ),
