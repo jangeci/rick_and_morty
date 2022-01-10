@@ -13,21 +13,16 @@ class DetailView extends GetView {
   Widget build(BuildContext context) {
     int id = Get.arguments['id'];
     late Character character;
-    bool fav = favoriteController.isFavorite(id);
 
     final List<Character> allCharacters = [...favoriteController.favoriteCharactersFiltered, ...homeController.characters];
     character = allCharacters.firstWhere((element) => element.id == id);
 
-    bool fromFavoriteMode = homeController.favoriteMode.value;
 
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              if (fromFavoriteMode && fav == true) {
-                homeController.switchMode();
-              }
               Get.back();
             },
           ),
